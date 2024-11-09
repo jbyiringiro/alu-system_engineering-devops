@@ -1,0 +1,25 @@
+
+#!/usr/bin/env bash
+# Bash script that installs HAProxy & makes configurations
+
+# Install required packages
+apt-get -y install software-properties-common
+add-apt-repository ppa:vbernat/haproxy-1.8
+apt-get update
+apt-get -y install haproxy
+
+# Enable HAProxy
+echo "ENABLED=1" >> /etc/default/haproxy
+
+# Configure HAProxy
+printf %s "listen 6287-webs
+    bind *:80
+    mode http
+    balance roundrobin
+    server 6287-web-01 54.237.196.178:80 check
+    server 6287-web-02 107.21.80.231:80 check
+" >> /etc/haproxy/haproxy.cfg
+
+# Restart HAProxy service
+sudo service haproxy restart
+
